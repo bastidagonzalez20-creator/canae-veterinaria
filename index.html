@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANAE - Urgencias Veterinarias</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Login Screen -->
+        <div class="screen active" id="loginScreen">
+            <div class="login-screen">
+                <div class="logo-container">
+                    <img class="paw-logo" src="assets/logo.png">
+                </div>
+                <h1>CANAE</h1>
+                <p class="subtitle">Urgencias veterinarias</p>
+                
+                <form class="login-form" onsubmit="showScreen('mainScreen'); return false;">
+                    <input type="email" placeholder="Correo electrónico" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    <button type="submit" class="login-btn">Iniciar Sesión</button>
+                </form>
+                
+                <p class="register-link">
+                    ¿No tienes cuenta? <a href="#" onclick="showScreen('registerScreen')">Regístrate</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Register Screen -->
+        <div class="screen" id="registerScreen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="showScreen('loginScreen')">←</button>
+                <h2>Registro</h2>
+                <div style="width: 44px;"></div>
+            </div>
+            <div class="login-screen" style="padding-top: 20px;">
+                <form class="login-form" onsubmit="showScreen('mainScreen'); return false;">
+                    <input type="text" placeholder="Nombre completo" required>
+                    <input type="email" placeholder="Correo electrónico" required>
+                    <input type="tel" placeholder="Teléfono" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    <input type="password" placeholder="Confirmar contraseña" required>
+                    <button type="submit" class="login-btn">Registrarse</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Screen -->
+        <div class="screen" id="mainScreen">
+            <div class="header">
+                <button class="menu-btn" onclick="toggleNav()">☰</button>
+            </div>
+            
+            <div class="main-content">
+                <h1 class="app-title">CANAE</h1>
+                <p class="menu-subtitle">¿QUÉ SUCEDE CON TU MASCOTA?</p>
+                
+                <div class="menu-options">
+                    <button class="menu-option" onclick="showQuestionnaire('golpe')">
+                        <span>Golpe / Caída</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option" onclick="showQuestionnaire('deshidratacion')">
+                        <span>Deshidratación</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option" onclick="showQuestionnaire('intoxicacion')">
+                        <span>Intoxicación</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option" onclick="showQuestionnaire('herida')">
+                        <span>Herida</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option" onclick="showQuestionnaire('noSeguro')">
+                        <span>No estoy seguro</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option sos-btn" onclick="showScreen('sosScreen')">
+                        <span>Botón SOS Veterinario</span>
+                        <span class="arrow"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Veterinarios Screen -->
+        <div class="screen" id="vetScreen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="showScreen('mainScreen')">←</button>
+                <h2>Veterinarios</h2>
+                
+            </div>
+            
+            <div class="main-content">
+                <div class="vet-section-title">Veterinarios cercanos</div>
+                
+                <div class="vet-card">
+                    <h3>🏥 Clínica Patitas</h3>
+                    <p>📍 1.2 km</p>
+                    <p>📞 555-123-4567</p>
+                    <div class="vet-actions">
+                        <a href="#" onclick="openMaps()">Ver ruta</a>
+                        <a href="tel:5551234567">Llamar</a>
+                    </div>
+                </div>
+                
+                <div class="vet-card">
+                    <h3>🏥 VetCare 24h</h3>
+                    <p>📍 2.0 km</p>
+                    <p>📞 555-987-6543</p>
+                    <p class="status open">🟢 Abierto 24 horas</p>
+                    <div class="vet-actions">
+                        <a href="#" onclick="openMaps()">Ver ruta</a>
+                        <a href="tel:5559876543">Llamar</a>
+                    </div>
+                </div>
+                
+                <div class="vet-card">
+                    <h3>🏥 Animal Health</h3>
+                    <p>📍 3.5 km</p>
+                    <p>📞 555-222-1111</p>
+                    <p class="status closed">🔴 Cerrado</p>
+                    <div class="vet-actions">
+                        <a href="#" onclick="openMaps()">Ver ruta</a>
+                        <a href="tel:5552221111">Llamar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOS Screen (Call) -->
+        <div class="screen" id="sosScreen">
+            <div class="call-screen">
+                <h2>Clínica Patitas</h2>
+                <div class="call-avatar">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <p class="call-number">555-123-4567</p>
+                
+                <div class="call-actions">
+                    <button class="call-action-btn">🔇</button>
+                    <button class="call-action-btn">⌨️</button>
+                    <button class="call-action-btn">🔊</button>
+                    <button class="call-action-btn">➕</button>
+                    <button class="call-action-btn">📹</button>
+                    <button class="call-action-btn">🎤</button>
+                </div>
+                
+                <button class="end-call-btn" onclick="showScreen('mainScreen')">📞</button>
+            </div>
+        </div>
+
+        <!-- Questionnaire Screen -->
+        <div class="screen" id="questionnaireScreen">
+            <div class="screen-header" style="background: var(--light-pink);">
+                <button class="back-btn" onclick="showScreen('mainScreen')">←</button>
+                <h2 id="questionnaireTitle">Situación</h2>
+                <div style="width: 44px;"></div>
+            </div>
+            
+            <div class="questionnaire">
+                <div class="question-header">
+                    <p class="question-main">¿Qué notas en tu mascota?</p>
+                    
+                    <div class="checkbox-group" id="symptomsList">
+                        <!-- Symptoms will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <button class="continue-btn" onclick="evaluateUrgency()">Continuar</button>
+            </div>
+        </div>
+
+        <!-- Urgency Result Screen -->
+        <div class="screen" id="urgencyScreen">
+            <div class="urgency-screen" id="urgencyContainer">
+                <div class="screen-header" id="urgencyHeader">
+                    <button class="back-btn" onclick="showScreen('questionnaireScreen')" style="color: white;">←</button>
+                    <h2 id="urgencyTitle" style="color: white;">URGENCIA</h2>
+                    <div style="width: 44px;"></div>
+                </div>
+                
+                <div class="urgency-content">
+                    <div class="symptoms-found">
+                        <h3>¿Qué notas en tu mascota?</h3>
+                        <div id="selectedSymptoms"></div>
+                    </div>
+                    
+                    <div class="urgency-message" id="urgencyMessage"></div>
+                    
+                    <button class="action-btn" onclick="showActions()">Ver acciones inmediatas</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Screen -->
+        <div class="screen" id="actionsScreen">
+            <div class="actions-screen">
+                <div class="actions-header">
+                    <button class="back-btn" onclick="showScreen('urgencyScreen')" style="color: white; position: absolute; left: 10px;">←</button>
+                    <h2>ACCIONES</h2>
+                </div>
+                
+                <div class="actions-content" id="actionsContent">
+                    <!-- Actions will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Navigation -->
+        <div class="side-nav-overlay" onclick="toggleNav()"></div>
+        <nav class="side-nav" id="sideNav">
+            <div style="margin-bottom: 30px;">
+                <img class="paw-logo" src="assets/logo.png">
+            </div>
+            
+            <button class="nav-item" onclick="showScreen('mainScreen'); toggleNav();">
+                <span class="icon"><img src="assets/Home.png" alt="Inicio"></span>
+                <span>Inicio</span>
+                <span class="arrow">▶</span>
+            </button>
+            
+            <button class="nav-item" onclick="showScreen('vetScreen'); toggleNav();">
+                <span class="icon"><img src="assets/logo.png" alt="Veterinarios"></span>
+                <span>Veterinarios</span>
+                <span class="arrow">▶</span>
+            </button>
+            
+            <button class="nav-item" onclick="toggleNav();">
+                <span class="icon"><img src="assets/settings.png" alt="Ajustes"></span>
+                <span>Ajustes</span>
+                <span class="arrow">▶</span>
+            </button>
+            
+            <button class="nav-item" onclick="toggleNav();">
+                <span class="icon"><img src="assets/perfil.png" alt="Perfil"></span>
+                <span>Perfil</span>
+                <span class="arrow">▶</span>
+            </button>
+            
+            <div class="nav-divider"></div>
+            
+            <button class="nav-item" onclick="showExitModal()">
+                <span class="arrow"> <img src="assets/logout.png" alt="Salir"></span>
+                <span>Salir</span>
+            </button>
+        </nav>
+
+        <!-- Exit Modal -->
+        <div class="modal" id="exitModal">
+            <div class="modal-content">
+                <h3>¿Está seguro que quiere salir?</h3>
+                <div class="modal-buttons">
+                    <button class="modal-btn yes" onclick="showScreen('loginScreen'); hideExitModal(); toggleNav();">Sí</button>
+                    <button class="modal-btn no" onclick="hideExitModal()">NO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for questionnaires
+        const questionnaires = {
+            golpe: {
+                title: 'Situación: Golpe o caída',
+                symptoms: [
+                    'Cojea o no apoya una pata',
+                    'Llora al moverse',
+                    'Está muy quieto o escondido',
+                    'Tiene inflamación visible',
+                    'Respira agitado'
+                ],
+                urgencyHigh: ['Cojea o no apoya una pata', 'Llora al moverse', 'Respira agitado'],
+                urgencyMedium: ['Está muy quieto o escondido', 'Tiene inflamación visible'],
+                actions: {
+                    high: {
+                        message: 'Lesión grave\nAcude al veterinario lo antes posible',
+                        steps: [
+                            'No lo muevas bruscamente',
+                            'Mantenlo calmado',
+                            'Evita tocar la zona dolorida',
+                            'Llévalo al veterinario lo antes posible'
+                        ]
+                    },
+                    medium: {
+                        message: 'Podría tener dolor o lesión leve\nVigila su comportamiento',
+                        steps: [
+                            'Limita movimiento',
+                            'Colócalo en lugar cómodo y tranquilo',
+                            'Aplica compresa fría envuelta en tela (10min)',
+                            'Vigila su forma de caminar'
+                        ]
+                    },
+                    low: {
+                        message: 'Observa durante las próximas horas\nSi empeora, consulta al veterinario',
+                        steps: [
+                            'Mantén a tu mascota en reposo',
+                            'Evita que corra o salte. Observa si camina normal en unas horas',
+                            'Revisa la zona inflamada suavemente'
+                        ]
+                    }
+                }
+            },
+            deshidratacion: {
+                title: 'Situación: Deshidratación',
+                symptoms: [
+                    'Ojos hundidos',
+                    'No quiere beber agua',
+                    'Orina poco',
+                    'Lengua o encías secas',
+                    'Está muy cansado'
+                ],
+                urgencyHigh: ['Ojos hundidos', 'No quiere beber agua', 'Orina poco'],
+                urgencyMedium: ['Lengua o encías secas', 'Está muy cansado'],
+                actions: {
+                    high: {
+                        message: 'Deshidratación severa\nAcude al veterinario de inmediato',
+                        steps: [
+                            'Ofrece agua de inmediato',
+                            'Mantenlo en lugar fresco',
+                            'No esperes mejora en casa',
+                            'Acude al veterinario cuanto antes'
+                        ]
+                    },
+                    medium: {
+                        message: 'Deshidratación moderada\nOfrece agua y observa',
+                        steps: [
+                            'Ofrece agua en pequeñas cantidades frecuentes',
+                            'Evita ejercicio o calor',
+                            'Observa si mejora en 1-2 horas'
+                        ]
+                    },
+                    low: {
+                        message: 'Posible deshidratación leve\nAsegura hidratación',
+                        steps: [
+                            'Ofrece agua fresca',
+                            'Pon varios recipientes de agua',
+                            'Mantenlo en lugar fresco',
+                            'Vigila su energía'
+                        ]
+                    }
+                }
+            },
+            intoxicacion: {
+                title: 'Situación: Intoxicación',
+                symptoms: [
+                    'Babeo excesivo',
+                    'Temblores',
+                    'Está desorientado',
+                    'Vómito',
+                    'No quiere comer'
+                ],
+                urgencyHigh: ['Babeo excesivo', 'Temblores', 'Está desorientado'],
+                urgencyMedium: ['Vómito', 'No quiere comer'],
+                actions: {
+                    high: {
+                        message: 'Posible intoxicación grave\nActúa rápido',
+                        steps: [
+                            'Retira la sustancia peligrosa',
+                            'No provoques vómito',
+                            'Mantenlo tranquilo',
+                            'Acude al veterinario de inmediato'
+                        ]
+                    },
+                    medium: {
+                        message: 'Posible intoxicación\nVigila de cerca',
+                        steps: [
+                            'Retira sustancia sospechosa',
+                            'Mantenlo vigilado',
+                            'No le des comida nueva',
+                            'Consulta veterinario pronto'
+                        ]
+                    },
+                    low: {
+                        message: 'Malestar leve\nObserva su evolución',
+                        steps: [
+                            'Observa su comportamiento',
+                            'Retira cualquier alimento sospechoso',
+                            'Ofrece agua'
+                        ]
+                    }
+                }
+            },
+            herida: {
+                title: 'Situación: Herida',
+                symptoms: [
+                    'Tiene dolor al tocar',
+                    'La herida está abierta',
+                    'Inflamación',
+                    'Se lame mucho la zona',
+                    'Sangrado leve'
+                ],
+                urgencyHigh: ['Tiene dolor al tocar', 'La herida está abierta'],
+                urgencyMedium: ['Inflamación', 'Se lame mucho la zona', 'Sangrado leve'],
+                actions: {
+                    high: {
+                        message: 'Herida que requiere atención\nAcude al veterinario',
+                        steps: [
+                            'Aplica presión suave si sangra',
+                            'No uses productos caseros',
+                            'Acude al veterinario lo antes posible'
+                        ]
+                    },
+                    medium: {
+                        message: 'Herida moderada\nLimpia y vigila',
+                        steps: [
+                            'Limpia la herida',
+                            'Coloca venda ligera si sangra',
+                            'Vigila signos de infección'
+                        ]
+                    },
+                    low: {
+                        message: 'Herida menor\nCuidado en casa',
+                        steps: [
+                            'Limpia con agua y gasa',
+                            'Mantén la zona limpia',
+                            'Evita que se lama mucho'
+                        ]
+                    }
+                }
+            },
+            noSeguro: {
+                title: 'Situación: No estoy seguro',
+                symptoms: [
+                    'Está decaído',
+                    'No quiere comer',
+                    'Cambió su comportamiento',
+                    'Llora sin razón aparente',
+                    'Duerme más de lo normal'
+                ],
+                urgencyHigh: ['Está decaído', 'Llora sin razón aparente'],
+                urgencyMedium: ['Cambió su comportamiento', 'Duerme más de lo normal'],
+                actions: {
+                    high: {
+                        message: 'Síntomas preocupantes\nConsulta al veterinario',
+                        steps: [
+                            'Mantenlo acompañado',
+                            'Vigila respiración y estado',
+                            'Acude al veterinario'
+                        ]
+                    },
+                    medium: {
+                        message: 'Cambios en comportamiento\nObserva de cerca',
+                        steps: [
+                            'Vigila cambios de conducta',
+                            'Asegura agua y comida',
+                            'Consulta si dura más de 24h'
+                        ]
+                    },
+                    low: {
+                        message: 'Probablemente está bien\nSigue observando',
+                        steps: [
+                            'Observa durante el día',
+                            'Mantén su rutina normal',
+                            'Vigila apetito y energía'
+                        ]
+                    }
+                }
+            }
+        };
+
+        let currentQuestionnaire = null;
+        let selectedSymptoms = [];
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function toggleNav() {
+            document.getElementById('sideNav').classList.toggle('active');
+            document.querySelector('.side-nav-overlay').classList.toggle('active');
+        }
+
+        function showExitModal() {
+            document.getElementById('exitModal').classList.add('active');
+        }
+
+        function hideExitModal() {
+            document.getElementById('exitModal').classList.remove('active');
+        }
+
+        function showQuestionnaire(type) {
+            currentQuestionnaire = type;
+            const data = questionnaires[type];
+            
+            document.getElementById('questionnaireTitle').textContent = data.title;
+            
+            const symptomsList = document.getElementById('symptomsList');
+            symptomsList.innerHTML = '';
+            
+            data.symptoms.forEach((symptom, index) => {
+                symptomsList.innerHTML += `
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="${symptom}" onchange="updateSymptoms(this)">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">${symptom}</span>
+                    </label>
+                `;
+            });
+            
+            selectedSymptoms = [];
+            showScreen('questionnaireScreen');
+        }
+
+        function updateSymptoms(checkbox) {
+            if (checkbox.checked) {
+                selectedSymptoms.push(checkbox.value);
+            } else {
+                selectedSymptoms = selectedSymptoms.filter(s => s !== checkbox.value);
+            }
+        }
+
+        function evaluateUrgency() {
+            if (selectedSymptoms.length === 0) {
+                alert('Por favor selecciona al menos un síntoma');
+                return;
+            }
+
+            const data = questionnaires[currentQuestionnaire];
+            let urgencyLevel = 'low';
+            
+            // Check for high urgency symptoms
+            const highCount = selectedSymptoms.filter(s => data.urgencyHigh.includes(s)).length;
+            const mediumCount = selectedSymptoms.filter(s => data.urgencyMedium.includes(s)).length;
+            
+            if (highCount >= 2 || (highCount >= 1 && selectedSymptoms.length >= 3)) {
+                urgencyLevel = 'high';
+            } else if (highCount >= 1 || mediumCount >= 2) {
+                urgencyLevel = 'medium';
+            }
+
+            displayUrgencyResult(urgencyLevel);
+        }
+
+        function displayUrgencyResult(level) {
+            const data = questionnaires[currentQuestionnaire];
+            const container = document.getElementById('urgencyContainer');
+            const header = document.getElementById('urgencyHeader');
+            const title = document.getElementById('urgencyTitle');
+            const symptomsDiv = document.getElementById('selectedSymptoms');
+            const messageDiv = document.getElementById('urgencyMessage');
+            
+            // Remove previous classes
+            header.className = 'screen-header';
+            
+            // Set urgency level styling
+            if (level === 'high') {
+                header.style.background = 'var(--urgency-high)';
+                title.textContent = 'URGENCIA ALTA';
+            } else if (level === 'medium') {
+                header.style.background = 'var(--urgency-medium)';
+                title.textContent = 'URGENCIA MEDIA';
+                title.style.color = 'var(--text-dark)';
+            } else {
+                header.style.background = 'var(--urgency-low)';
+                title.textContent = 'URGENCIA BAJA';
+                title.style.color = 'var(--text-dark)';
+            }
+            
+            // Display selected symptoms
+            symptomsDiv.innerHTML = selectedSymptoms.map(s => 
+                `<span class="symptom-tag"><span class="dot" style="background: ${level === 'high' ? 'var(--urgency-high)' : level === 'medium' ? '#FFB800' : '#4CAF50'}"></span>${s}</span>`
+            ).join('');
+            
+            // Display message
+            messageDiv.textContent = data.actions[level].message;
+            
+            // Store current level for actions
+            container.dataset.level = level;
+            
+            showScreen('urgencyScreen');
+        }
+
+        function showActions() {
+            const data = questionnaires[currentQuestionnaire];
+            const level = document.getElementById('urgencyContainer').dataset.level;
+            const actionsDiv = document.getElementById('actionsContent');
+            
+            const actions = data.actions[level];
+            
+            let html = '';
+            actions.steps.forEach((step, index) => {
+                html += `
+                    <div class="action-step">
+                        <h3>Paso ${index + 1}:</h3>
+                        <p>${step}</p>
+                    </div>
+                `;
+            });
+            
+            html += `<button class="find-vet-btn" onclick="showScreen('vetScreen')">Buscar veterinario</button>`;
+            
+            if (level !== 'high') {
+                html += `<p class="warning-note">Si aparece otro síntoma, subir urgencia. ${level === 'low' ? 'Si no mejora, acudir al veterinario' : 'Consultar veterinario si no mejora'}</p>`;
+            }
+            
+            actionsDiv.innerHTML = html;
+            showScreen('actionsScreen');
+        }
+
+        function openMaps() {
+            // This would open maps in a real app
+            alert('Se abriría la aplicación de mapas');
+        }
+    </script>
+</body>
+</html>
