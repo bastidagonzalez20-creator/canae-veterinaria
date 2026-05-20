@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANAE - Veterinarios</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="screen active" id="vetScreen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="goBack()">⬅</button>
+                <h2>Veterinarios</h2>
+                <div style="width: 44px;"></div>
+            </div>
+            
+            <div class="main-content">
+                <div class="logo">
+                    <img class="paw-logo" src="assets/logo.png" alt="Logo CANAE">
+                </div>
+                
+                <div class="vet-card">
+                    <h3>🏥 Clínica Patitas</h3>
+                    <p>📍 1.2 km</p>
+                    <p>📞 555-123-4567</p>
+                    <div class="vet-actions">
+                        <a href="#" onclick="openMaps()">Ver ruta</a>
+                        <a href="tel:5551234567">Llamar</a>
+                    </div>
+                </div>
+                
+                <div class="vet-card">
+                    <h3>🏥 VetCare 24h</h3>
+                    <p>📍 2.0 km</p>
+                    <p>📞 555-987-6543</p>
+                    <p class="status open">🟢 Abierto 24 horas</p>
+                    <div class="vet-actions">
+                        <a href="#" onclick="openMaps()">Ver ruta</a>
+                        <a href="tel:5559876543">Llamar</a>
+                    </div>
+                </div>
+                
+                <div class="vet-card">
+                    <h3>🏥 Animal Health</h3>
+                    <p>📍 3.5 km</p>
+                    <p>📞 555-222-1111</p>
+                    <p class="status closed">🔴 Cerrado</p>
+                    <div class="vet-actions">
+                        <a href="#" onclick="openMaps()">Ver ruta</a>
+                        <a href="tel:5552221111">Llamar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            const comingFrom = localStorage.getItem('comingFrom') || 'app.html';
+            window.location.href = comingFrom;
+        }
+
+        function openMaps() {
+            alert('Se abriría la aplicación de mapas');
+        }
+
+        // Verificar autenticación
+        if (localStorage.getItem('userLogged') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Guardar de dónde venimos para volver correctamente
+        localStorage.setItem('comingFrom', document.referrer || 'app.html');
+    </script>
+</body>
+</html>

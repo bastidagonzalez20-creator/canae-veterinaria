@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANAE - Urgencias Veterinarias</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Login Screen -->
+        <div class="screen active" id="loginScreen">
+            <div class="login-screen">
+                <div class="logo-container">
+                    <img class="paw-logo" src="assets/logo.png" alt="Logo CANAE">
+                </div>
+                <h1>CANAE</h1>
+                <p class="subtitle">Urgencias veterinarias</p>
+
+                <form class="login-form" onsubmit="handleLogin(event)">
+                    <input type="email" placeholder="Correo electrónico" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    <button type="submit" class="login-btn">Iniciar Sesión</button>
+                </form>
+
+                <p class="register-link">
+                    ¿No tienes cuenta? <a href="#" onclick="toggleRegister()">Regístrate</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Register Screen -->
+        <div class="screen" id="registerScreen">
+            <div class="screen-header">
+                <button class="back-btn" onclick="toggleRegister()">←</button>
+                <h2>Registro</h2>
+                <div style="width: 44px;"></div>
+            </div>
+            <div class="login-screen" style="padding-top: 20px;">
+                <form class="login-form" onsubmit="handleRegister(event)">
+                    <input type="text" placeholder="Nombre completo" required>
+                    <input type="email" placeholder="Correo electrónico" required>
+                    <input type="tel" placeholder="Teléfono" required>
+                    <input type="password" placeholder="Contraseña" required>
+                    <input type="password" placeholder="Confirmar contraseña" required>
+                    <button type="submit" class="login-btn">Registrarse</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleRegister() {
+            document.getElementById('loginScreen').classList.toggle('active');
+            document.getElementById('registerScreen').classList.toggle('active');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            // Guardar estado y redirigir a app
+            localStorage.setItem('userLogged', 'true');
+            window.location.href = 'app.html';
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            alert('¡Registro exitoso! Ahora inicia sesión');
+            toggleRegister();
+        }
+
+        // Verificar si ya está logueado
+        if (localStorage.getItem('userLogged') === 'true') {
+            window.location.href = 'app.html';
+        }
+    </script>
+</body>
+
+</html>

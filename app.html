@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANAE - App Principal</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Main Screen -->
+        <div class="screen active" id="mainScreen">
+            <div class="header">
+                <button class="menu-btn" onclick="toggleNav()">☰</button>
+            </div>
+            
+            <div class="main-content">
+                <h1 class="app-title">CANAE</h1>
+                <p class="menu-subtitle">¿QUÉ SUCEDE CON TU MASCOTA?</p>
+                
+                <div class="menu-options">
+                    <button class="menu-option" onclick="goToQuestionnaire('golpe')">
+                        <span>Golpe / Caída</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option" onclick="goToQuestionnaire('deshidratacion')">
+                        <span>Deshidratación</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option" onclick="goToQuestionnaire('intoxicacion')">
+                        <span>Intoxicación</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option" onclick="goToQuestionnaire('herida')">
+                        <span>Herida</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option" onclick="goToQuestionnaire('noSeguro')">
+                        <span>No estoy seguro</span>
+                        <span class="arrow">▶</span>
+                    </button>
+                    <button class="menu-option sos-btn" onclick="window.location.href='sos.html'">
+                        <span>Botón SOS Veterinario</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Navigation -->
+        <div class="side-nav-overlay" onclick="toggleNav()"></div>
+        <nav class="side-nav" id="sideNav">
+            <div style="margin-bottom: 30px;">
+                <img class="paw-logo" src="assets/logo.png" alt="Logo">
+            </div>
+            
+            <button class="nav-item" onclick="toggleNav()">
+                <span class="icon"><img src="assets/Home.png" alt="Inicio"></span>
+                <span>Inicio</span>
+                <span class="arrow">▶</span>
+            </button>
+            
+            <button class="nav-item" onclick="goToVeterinarios()">
+                <span class="icon"><img src="assets/logo.png" alt="Veterinarios"></span>
+                <span>Veterinarios</span>
+                <span class="arrow">▶</span>
+            </button>
+            
+            <button class="nav-item" onclick="toggleNav()">
+                <span class="icon"><img src="assets/settings.png" alt="Ajustes"></span>
+                <span>Ajustes</span>
+                <span class="arrow">▶</span>
+            </button>
+            
+            <button class="nav-item" onclick="toggleNav()">
+                <span class="icon"><img src="assets/perfil.png" alt="Perfil"></span>
+                <span>Perfil</span>
+                <span class="arrow">▶</span>
+            </button>
+            
+            <div class="nav-divider"></div>
+            
+            <button class="nav-item" onclick="showExitModal()">
+                <!-- <span class="icon"> -->
+                    <span class="arrow">
+                        <img src="assets/logout.png" alt="Salir">
+                    </span>
+                <!-- </span> -->
+                <span>Salir</span>
+            </button>
+        </nav>
+
+        <!-- Exit Modal -->
+        <div class="modal" id="exitModal">
+            <div class="modal-content">
+                <h3>¿Está seguro que quiere salir?</h3>
+                <div class="modal-buttons">
+                    <button class="modal-btn yes" onclick="logout()">Sí</button>
+                    <button class="modal-btn no" onclick="hideExitModal()">NO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleNav() {
+            document.getElementById('sideNav').classList.toggle('active');
+            document.querySelector('.side-nav-overlay').classList.toggle('active');
+        }
+
+        function showExitModal() {
+            document.getElementById('exitModal').classList.add('active');
+        }
+
+        function hideExitModal() {
+            document.getElementById('exitModal').classList.remove('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('userLogged');
+            localStorage.removeItem('currentQuestionnaire');
+            localStorage.removeItem('selectedSymptoms');
+            window.location.href = 'login.html';
+        }
+
+        function goToQuestionnaire(type) {
+            localStorage.setItem('currentQuestionnaire', type);
+            localStorage.setItem('selectedSymptoms', '[]');
+            window.location.href = 'questionnaire.html';
+        }
+
+        function goToVeterinarios() {
+            window.location.href = 'veterinarios.html';
+        }
+
+        // Verificar autenticación
+        if (localStorage.getItem('userLogged') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

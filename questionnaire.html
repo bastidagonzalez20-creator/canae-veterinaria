@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANAE - Cuestionario</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="screen active" id="questionnaireScreen">
+            <div class="screen-header" style="background: var(--light-pink);">
+                <button class="back-btn" onclick="goBack()">←</button>
+                <h2 id="questionnaireTitle">Situación</h2>
+                <div style="width: 44px;"></div>
+            </div>
+            
+            <div class="questionnaire">
+                <div class="question-header">
+                    <p class="question-main">¿Qué notas en tu mascota?</p>
+                    
+                    <div class="checkbox-group" id="symptomsList">
+                        <!-- Symptoms will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <button class="continue-btn" onclick="evaluateUrgency()">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionnaires = {
+            golpe: {
+                title: 'Situación: Golpe o caída',
+                symptoms: [
+                    'Cojea o no apoya una pata',
+                    'Llora al moverse',
+                    'Está muy quieto o escondido',
+                    'Tiene inflamación visible',
+                    'Respira agitado'
+                ],
+                urgencyHigh: ['Cojea o no apoya una pata', 'Llora al moverse', 'Respira agitado'],
+                urgencyMedium: ['Está muy quieto o escondido', 'Tiene inflamación visible'],
+                actions: {
+                    high: {
+                        message: 'Lesión grave\nAcude al veterinario lo antes posible',
+                        steps: [
+                            'No lo muevas bruscamente',
+                            'Mantenlo calmado',
+                            'Evita tocar la zona dolorida',
+                            'Llévalo al veterinario lo antes posible'
+                        ]
+                    },
+                    medium: {
+                        message: 'Podría tener dolor o lesión leve\nVigila su comportamiento',
+                        steps: [
+                            'Limita movimiento',
+                            'Colócalo en lugar cómodo y tranquilo',
+                            'Aplica compresa fría envuelta en tela (10min)',
+                            'Vigila su forma de caminar'
+                        ]
+                    },
+                    low: {
+                        message: 'Observa durante las próximas horas\nSi empeora, consulta al veterinario',
+                        steps: [
+                            'Mantén a tu mascota en reposo',
+                            'Evita que corra o salte. Observa si camina normal en unas horas',
+                            'Revisa la zona inflamada suavemente'
+                        ]
+                    }
+                }
+            },
+            deshidratacion: {
+                title: 'Situación: Deshidratación',
+                symptoms: [
+                    'Ojos hundidos',
+                    'No quiere beber agua',
+                    'Orina poco',
+                    'Lengua o encías secas',
+                    'Está muy cansado'
+                ],
+                urgencyHigh: ['Ojos hundidos', 'No quiere beber agua', 'Orina poco'],
+                urgencyMedium: ['Lengua o encías secas', 'Está muy cansado'],
+                actions: {
+                    high: {
+                        message: 'Deshidratación severa\nAcude al veterinario de inmediato',
+                        steps: [
+                            'Ofrece agua de inmediato',
+                            'Mantenlo en lugar fresco',
+                            'No esperes mejora en casa',
+                            'Acude al veterinario cuanto antes'
+                        ]
+                    },
+                    medium: {
+                        message: 'Deshidratación moderada\nOfrece agua y observa',
+                        steps: [
+                            'Ofrece agua en pequeñas cantidades frecuentes',
+                            'Evita ejercicio o calor',
+                            'Observa si mejora en 1-2 horas'
+                        ]
+                    },
+                    low: {
+                        message: 'Posible deshidratación leve\nAsegura hidratación',
+                        steps: [
+                            'Ofrece agua fresca',
+                            'Pon varios recipientes de agua',
+                            'Mantenlo en lugar fresco',
+                            'Vigila su energía'
+                        ]
+                    }
+                }
+            },
+            intoxicacion: {
+                title: 'Situación: Intoxicación',
+                symptoms: [
+                    'Babeo excesivo',
+                    'Temblores',
+                    'Está desorientado',
+                    'Vómito',
+                    'No quiere comer'
+                ],
+                urgencyHigh: ['Babeo excesivo', 'Temblores', 'Está desorientado'],
+                urgencyMedium: ['Vómito', 'No quiere comer'],
+                actions: {
+                    high: {
+                        message: 'Posible intoxicación grave\nActúa rápido',
+                        steps: [
+                            'Retira la sustancia peligrosa',
+                            'No provoques vómito',
+                            'Mantenlo tranquilo',
+                            'Acude al veterinario de inmediato'
+                        ]
+                    },
+                    medium: {
+                        message: 'Posible intoxicación\nVigila de cerca',
+                        steps: [
+                            'Retira sustancia sospechosa',
+                            'Mantenlo vigilado',
+                            'No le des comida nueva',
+                            'Consulta veterinario pronto'
+                        ]
+                    },
+                    low: {
+                        message: 'Malestar leve\nObserva su evolución',
+                        steps: [
+                            'Observa su comportamiento',
+                            'Retira cualquier alimento sospechoso',
+                            'Ofrece agua'
+                        ]
+                    }
+                }
+            },
+            herida: {
+                title: 'Situación: Herida',
+                symptoms: [
+                    'Tiene dolor al tocar',
+                    'La herida está abierta',
+                    'Inflamación',
+                    'Se lame mucho la zona',
+                    'Sangrado leve'
+                ],
+                urgencyHigh: ['Tiene dolor al tocar', 'La herida está abierta'],
+                urgencyMedium: ['Inflamación', 'Se lame mucho la zona', 'Sangrado leve'],
+                actions: {
+                    high: {
+                        message: 'Herida que requiere atención\nAcude al veterinario',
+                        steps: [
+                            'Aplica presión suave si sangra',
+                            'No uses productos caseros',
+                            'Acude al veterinario lo antes posible'
+                        ]
+                    },
+                    medium: {
+                        message: 'Herida moderada\nLimpia y vigila',
+                        steps: [
+                            'Limpia la herida',
+                            'Coloca venda ligera si sangra',
+                            'Vigila signos de infección'
+                        ]
+                    },
+                    low: {
+                        message: 'Herida menor\nCuidado en casa',
+                        steps: [
+                            'Limpia con agua y gasa',
+                            'Mantén la zona limpia',
+                            'Evita que se lama mucho'
+                        ]
+                    }
+                }
+            },
+            noSeguro: {
+                title: 'Situación: No estoy seguro',
+                symptoms: [
+                    'Está decaído',
+                    'No quiere comer',
+                    'Cambió su comportamiento',
+                    'Llora sin razón aparente',
+                    'Duerme más de lo normal'
+                ],
+                urgencyHigh: ['Está decaído', 'Llora sin razón aparente'],
+                urgencyMedium: ['Cambió su comportamiento', 'Duerme más de lo normal'],
+                actions: {
+                    high: {
+                        message: 'Síntomas preocupantes\nConsulta al veterinario',
+                        steps: [
+                            'Mantenlo acompañado',
+                            'Vigila respiración y estado',
+                            'Acude al veterinario'
+                        ]
+                    },
+                    medium: {
+                        message: 'Cambios en comportamiento\nObserva de cerca',
+                        steps: [
+                            'Vigila cambios de conducta',
+                            'Asegura agua y comida',
+                            'Consulta si dura más de 24h'
+                        ]
+                    },
+                    low: {
+                        message: 'Probablemente está bien\nSigue observando',
+                        steps: [
+                            'Observa durante el día',
+                            'Mantén su rutina normal',
+                            'Vigila apetito y energía'
+                        ]
+                    }
+                }
+            }
+        };
+
+        function initQuestionnaire() {
+            const type = localStorage.getItem('currentQuestionnaire');
+            if (!type || !questionnaires[type]) {
+                window.location.href = 'app.html';
+                return;
+            }
+
+            const data = questionnaires[type];
+            document.getElementById('questionnaireTitle').textContent = data.title;
+            
+            const symptomsList = document.getElementById('symptomsList');
+            symptomsList.innerHTML = '';
+            
+            data.symptoms.forEach((symptom) => {
+                symptomsList.innerHTML += `
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="${symptom}" onchange="updateSymptoms()">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">${symptom}</span>
+                    </label>
+                `;
+            });
+        }
+
+        function updateSymptoms() {
+            const checkboxes = document.querySelectorAll('.checkbox-item input');
+            const selected = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+            localStorage.setItem('selectedSymptoms', JSON.stringify(selected));
+        }
+
+        function evaluateUrgency() {
+            const selectedStr = localStorage.getItem('selectedSymptoms');
+            const selectedSymptoms = JSON.parse(selectedStr || '[]');
+
+            if (selectedSymptoms.length === 0) {
+                alert('Por favor selecciona al menos un síntoma');
+                return;
+            }
+
+            const type = localStorage.getItem('currentQuestionnaire');
+            const data = questionnaires[type];
+            
+            let urgencyLevel = 'low';
+            
+            const highCount = selectedSymptoms.filter(s => data.urgencyHigh.includes(s)).length;
+            const mediumCount = selectedSymptoms.filter(s => data.urgencyMedium.includes(s)).length;
+            
+            if (highCount >= 2 || (highCount >= 1 && selectedSymptoms.length >= 3)) {
+                urgencyLevel = 'high';
+            } else if (highCount >= 1 || mediumCount >= 2) {
+                urgencyLevel = 'medium';
+            }
+
+            localStorage.setItem('urgencyLevel', urgencyLevel);
+            window.location.href = 'resultado.html';
+        }
+
+        function goBack() {
+            window.location.href = 'app.html';
+        }
+
+        // Verificar autenticación
+        if (localStorage.getItem('userLogged') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        // Inicializar cuestionario
+        initQuestionnaire();
+    </script>
+</body>
+</html>
